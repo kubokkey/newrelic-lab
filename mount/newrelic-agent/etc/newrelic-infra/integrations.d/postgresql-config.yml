@@ -1,0 +1,17 @@
+integrations:
+  - name: nri-postgresql
+    env:
+      USERNAME: postgres
+      PASSWORD: passw0rd
+      HOSTNAME: 127.0.0.1
+      PORT: 5432
+      DATABASE: postgres
+      COLLECT_DB_LOCK_METRICS: false
+      COLLECTION_LIST: ALL
+      TIMEOUT:  10
+    interval: 15s
+    labels:
+      env: dev
+      role: postgresql
+    inventory_source: config/postgresql
+    

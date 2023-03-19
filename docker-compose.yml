@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  nri:
+    image: newrelic/infrastructure-bundle:latest
+    cap_add:
+      - SYS_PTRACE
+    network_mode: host
+    pid: host
+    privileged: true
+    volumes:
+      - "/:/host:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      #- "./mount/newrelic-agent/etc/newrelic-infra.yml:/etc/newrelic-infra.yml:ro"
+      - "./mount/newrelic-agent/etc/newrelic-infra/integrations.d:/etc/newrelic-infra/integrations.d:ro"
+    restart: unless-stopped
+    environment:
+      - NRIA_LICENSE_KEY=$NRIA_LICENSE_KEY
+  db:
+    image: postgres:14
+    ports:
+      - 5432:5432
+    volumes:
+      - db-store:/var/lib/postgresql/data
+      - ./mount/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      #- ./mount/postgres/etc/postgresql/postgresql.conf:/etc/postgresql/postgresql.conf
+    environment:
+      - POSTGRES_PASSWORD=passw0rd
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+volumes:
+  db-store:
+  
